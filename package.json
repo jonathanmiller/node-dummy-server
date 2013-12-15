@@ -1,0 +1,9 @@
+{
+  "name": "dummy-server",
+  "version": "1.0.0-beta",
+  "author": "Jonathan Miller <jonathan.michael.miller@gmail.com>",
+  "main": "dummy-server.js",
+  "dependencies": {
+  }
+}
+
