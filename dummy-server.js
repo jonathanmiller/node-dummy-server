@@ -2,18 +2,8 @@
 var util = require('util');
 var os   = require('os');
 var http = require('http');
+var redis = require('redis').createClient();
 var count = 0;
-
-/*var bulkhead = [
-  "                  _       ",
-  "                 | |      ",
-  "  _ __   ___   __| | ___  ",
-  " | '_ \\ / _ \\ / _` |/ _ \\ ",
-  " | | | | (_) | (_| |  __/ ",
-  " |_| |_|\\___/ \\__,_|\\___| ",
-  "                          ",
-  "                          "
-];*/
 
 var bulkhead = [
   "  _   _           _        _      ",
@@ -41,18 +31,20 @@ http.createServer(function (req, res) {
   	process.arch,
   	os.cpus()[0].model );
 
-
-  var out = [
-  	'Hello World',
-  	'Path->'+req.url,
-    'NodeJS ' + process.version,
-    uname,
-    'headers->'
-  ];
-  Object.keys(req.headers).sort().forEach( function( it ) {
-    out.push(it+': '+req.headers[it]);
+  redis.smembers( 'route::'+req.headers['x-token'], function(err,vals){
+    var out = [
+    	'Hello World',
+    	'Path->'+req.url,
+      'NodeJS ' + process.version,
+      uname,
+      'peer group->' + vals.join(','),
+      'headers->'
+    ];
+    Object.keys(req.headers).sort().forEach( function( it ) {
+      out.push(it+': '+req.headers[it]);
+    });
+    res.end([].concat( bulkhead, out ).join('\n'));
   });
-  res.end([].concat( bulkhead, out ).join('\n'));
 }).listen(1337);
 console.log('Server running at http://127.0.0.1:1337/');
 

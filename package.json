@@ -4,6 +4,7 @@
   "author": "Jonathan Miller <jonathan.michael.miller@gmail.com>",
   "main": "dummy-server.js",
   "dependencies": {
+    "redis": "*"
   }
 }
 
